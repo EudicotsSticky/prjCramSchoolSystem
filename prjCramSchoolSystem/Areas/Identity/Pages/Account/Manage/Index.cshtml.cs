@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -30,28 +31,23 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
             _webHostEnvironment = webHostEnvironment;
             // 把上傳目錄設為：wwwroot\Files\thumbnail
-            _folder = _webHostEnvironment.WebRootPath + @"\Files\thumbnail\";
+            _folder = Path.Combine(_webHostEnvironment.WebRootPath, @"Files\thumbnail\");
         }
 
-        // 圖片格式規定
-        //private readonly static Dictionary<string, string> _contentTypes = new Dictionary<string, string>
-        //{
-        //    {".png", "image/png"},
-        //    {".jpg", "image/jpeg"},
-        //    {".jpeg", "image/jpeg"},
-        //    {".gif", "image/gif"}
-        //};
+        // 大頭貼資料夾存取路徑
+        public string FolderPath { get; set; }
+
+        // 大頭貼路徑組成
+        public string ThumbnailPath { get; set; }
+
+        // 從input file裡取name為thumbnail的值
+        public IFormFile thumbnail { get; set; }
 
         // 資料模型
         public string Username { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
-
-        public string ThumbnailPath { get; set; }
-
-        // 從input file裡取name為thumbnail的值
-        public IFormFile thumbnail { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -140,11 +136,13 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 ThumbnailName = user.ThumbnailName,
                 UpdateDate = user.UpdateDate,
             };
+            // Url.Content呼叫處，如果未來有要改資料夾儲存路徑，修改此處
+            FolderPath = "~/Files/thumbnail/";
 
-            if (!String.IsNullOrEmpty(Input.ThumbnailName))
-                ThumbnailPath = _folder + Input.ThumbnailName;
-            else
-                ThumbnailPath = _folder + "noThumbnail.png";
+            // 如果完全無存入照片，使用預設照片
+            if (String.IsNullOrEmpty(Input.ThumbnailName))
+                ThumbnailPath = "noThumbnail.png";
+            ThumbnailPath = user.ThumbnailName;
         }
 
         // HttpGet方式取得資料
@@ -167,7 +165,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -182,7 +180,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "嘗試設定電話號碼時發生未預期錯誤";
                     return RedirectToPage();
                 }
             }
@@ -211,10 +209,21 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             //就學狀態需討論
             //if (Input.Status != user.Status)
             //    user.Status = Input.Status;
-            if (Input.ThumbnailName != user.ThumbnailName)
-            {
-                user.ThumbnailName = Input.ThumbnailName;
 
+            // 最初沒有照片時的上傳
+            // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
+            if (thumbnail != null && String.IsNullOrEmpty(user.ThumbnailName))
+            {
+                string thumbnailExt = Path.GetExtension(thumbnail.FileName);
+                string newThumbnailName = Guid.NewGuid().ToString() + thumbnailExt;
+                user.ThumbnailName = newThumbnailName;
+                await thumbnail.CopyToAsync(new FileStream(_folder + newThumbnailName, FileMode.Create));
+            }
+            // 當資料庫有存檔案位置，但有更新檔案
+            else if(thumbnail != null && !String.IsNullOrEmpty(user.ThumbnailName))
+            {
+                // 直接覆蓋檔案名稱，覆蓋原檔案
+                await thumbnail.CopyToAsync(new FileStream(_folder + user.ThumbnailName, FileMode.Create));
             }
 
             // 直接更新更改時間，不經過input

@@ -39,6 +39,9 @@ namespace prjCramSchoolSystem
             // 此處為用razor pages生成驗證頁面
             services.AddRazorPages();
 
+            // 加入session服務
+            services.AddSession();
+
             // 此處加入身分驗證服務
             services.Configure<IdentityOptions>(options =>
             {
@@ -106,6 +109,10 @@ namespace prjCramSchoolSystem
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            //加入session
+            app.UseSession();
+
 
             // 啟動驗證服務
             app.UseAuthentication();

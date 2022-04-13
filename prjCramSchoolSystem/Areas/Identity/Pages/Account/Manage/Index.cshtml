@@ -7,14 +7,17 @@
 
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
+<div>
+    <div>
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.ThumbnailName"></label>
-                <input class="form-control" type="file" id="thumbNail" name="file">
-                <img id="thumbNailImg" src="@Model.ThumbnailPath" alt="無此圖片" width="300" />
+                <div class="centered">
+                    <img class="img-thumbnail" id="thumbnailImg" src="@Url.Content(Model.FolderPath)@Model.ThumbnailPath" alt="無此圖片" height=300 />
+                    <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/*">
+                </div>
+          
             </div>
             <div class="form-group">
                 <label asp-for="Username"></label>
@@ -73,11 +76,11 @@
 
 
         // 即時呈現圖片載入
-        const thumbNail = document.querySelector('#thumbNail');
-        const thumbPreview = document.querySelector('#thumbNailImg');
+        const thumbnail = document.querySelector('#thumbnail');
+        const thumbPreview = document.querySelector('#thumbnailImg');
         // 圖片改變時
-        thumbNail.addEventListener('change', () => {
-            const file = thumbNail.files[0];
+        thumbnail.addEventListener('change', () => {
+            const file = thumbnail.files[0];
             // 建立FileReader物件
             const reader = new FileReader();
             // 圖讀完後
@@ -87,6 +90,6 @@
             })
             // 讀取圖片
             reader.readAsDataURL(file);
-        })
+        });
     </script>
 }

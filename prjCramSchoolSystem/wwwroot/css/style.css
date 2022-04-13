@@ -889,10 +889,13 @@ ol {
     }
 
 .team__item {
-    height: 360px;
+    /*height: 360px;*/
     position: relative;
     overflow: hidden;
     margin-bottom: 30px;
+    width: calc(84% - 20px);
+    float: left;
+    margin-right: 20px;
 }
 
     .team__item:hover .team__item__text {
