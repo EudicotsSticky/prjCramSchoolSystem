@@ -113,7 +113,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             public DateTime? UpdateDate { get; set; }
         }
 
-
+        
         // 載入方法，被後續方法呼叫
         private async Task LoadAsync(ApplicationUser user)
         {
@@ -146,7 +146,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             else
                 ThumbnailPath = _folder + "noThumbnail.png";
         }
-
+       
         // HttpGet方式取得資料
         public async Task<IActionResult> OnGetAsync()
         {
