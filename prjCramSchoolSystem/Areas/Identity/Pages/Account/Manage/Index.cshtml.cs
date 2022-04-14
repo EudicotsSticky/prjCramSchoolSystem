@@ -158,55 +158,55 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        // HttpPost方法(修改)
-        public async Task<IActionResult> OnPostAsync()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            // HttpPost方法(修改)
+            public async Task<IActionResult> OnPostAsync()
             {
-                return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                await LoadAsync(user);
-                return Page();
-            }
-
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
                 {
-                    StatusMessage = "嘗試設定電話號碼時發生未預期錯誤";
-                    return RedirectToPage();
+                    return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'.");
                 }
-            }
-            // 如果資料有更新，更新欄位
-            if (Input.Address != user.Address)
-                user.Address = Input.Address;
-            if (Input.BirthDate != user.BirthDate)
-                user.BirthDate = Input.BirthDate;
-            //資料創建日期不給更改
-            //if (Input.CreateDate != user.CreateDate)
-            //    user.CreateDate = Input.CreateDate;
-            if (Input.Enrollment != user.Enrollment)
-                user.Enrollment = Input.Enrollment;
-            if (Input.FatherName != user.FatherName)
-                user.FatherName = Input.FatherName;
-            if (Input.FirstName != user.FirstName)
-                user.FirstName = Input.FirstName;
-            if (Input.Gender != user.Gender)
-                user.Gender = Input.Gender;
-            if (Input.Grade != user.Grade)
-                user.Grade = Input.Grade;
-            if (Input.LastName != user.LastName)
-                user.LastName = Input.LastName;
-            if (Input.MotherName != user.MotherName)
-                user.MotherName = Input.MotherName;
-            //就學狀態需討論
-            //if (Input.Status != user.Status)
+
+                if (!ModelState.IsValid)
+                {
+                    await LoadAsync(user);
+                    return Page();
+                }
+
+                var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+                if (Input.PhoneNumber != phoneNumber)
+                {
+                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                    if (!setPhoneResult.Succeeded)
+                    {
+                        StatusMessage = "嘗試設定電話號碼時發生未預期錯誤";
+                        return RedirectToPage();
+                    }
+                }
+                // 如果資料有更新，更新欄位
+                if (Input.Address != user.Address)
+                    user.Address = Input.Address;
+                if (Input.BirthDate != user.BirthDate)
+                    user.BirthDate = Input.BirthDate;
+                //資料創建日期不給更改
+                //if (Input.CreateDate != user.CreateDate)
+                //    user.CreateDate = Input.CreateDate;
+                if (Input.Enrollment != user.Enrollment)
+                    user.Enrollment = Input.Enrollment;
+                if (Input.FatherName != user.FatherName)
+                    user.FatherName = Input.FatherName;
+                if (Input.FirstName != user.FirstName)
+                    user.FirstName = Input.FirstName;
+                if (Input.Gender != user.Gender)
+                    user.Gender = Input.Gender;
+                if (Input.Grade != user.Grade)
+                    user.Grade = Input.Grade;
+                if (Input.LastName != user.LastName)
+                    user.LastName = Input.LastName;
+                if (Input.MotherName != user.MotherName)
+                    user.MotherName = Input.MotherName;
+                //就學狀態需討論
+                //if (Input.Status != user.Status)
 
             // 最初沒有照片時的上傳
             // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
@@ -224,11 +224,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
 
 
 
-            // 直接更新更改時間，不經過input
-            user.UpdateDate = DateTime.Now;
+                // 直接更新更改時間，不經過input
+                user.UpdateDate = DateTime.Now;
 
 
-            await _userManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "您的個人資料已更新成功";
