@@ -16,8 +16,7 @@
                 <div class="centered">
                     <img class="img-thumbnail" id="thumbnailImg" src="@Url.Content(Model.FolderPath)@Model.ThumbnailPath" alt="無此圖片" height=300 />
                     <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/*">
-                </div>
-          
+                </div>          
             </div>
             <div class="form-group">
                 <label asp-for="Username"></label>
@@ -72,9 +71,6 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-
-
-
         // 即時呈現圖片載入
         const thumbnail = document.querySelector('#thumbnail');
         const thumbPreview = document.querySelector('#thumbnailImg');

@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -26,6 +26,13 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ThumbnailName"></label>
+                <div class="centered">
+                    <img class="img-thumbnail" id="thumbnailImg" src="@Url.Content(Model.FolderPath)@Model.ThumbnailPath" alt="無此圖片" height=300 />
+                    <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/*">
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Input.LastName"></label>
@@ -109,4 +116,22 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // 即時呈現圖片載入
+        const thumbnail = document.querySelector('#thumbnail');
+        const thumbPreview = document.querySelector('#thumbnailImg');
+        // 圖片改變時
+        thumbnail.addEventListener('change', () => {
+            const file = thumbnail.files[0];
+            // 建立FileReader物件
+            const reader = new FileReader();
+            // 圖讀完後
+            reader.addEventListener('load', (evt) => {
+                //console.log(evt.target.result);
+                thumbPreview.src = evt.target.result;
+            })
+            // 讀取圖片
+            reader.readAsDataURL(file);
+        });
+    </script>
 }

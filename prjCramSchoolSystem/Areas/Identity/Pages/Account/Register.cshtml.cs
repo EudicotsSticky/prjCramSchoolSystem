@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +27,33 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly string _folder;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _webHostEnvironment = webHostEnvironment;
+            // 把上傳目錄設為：wwwroot\Files\thumbnail
+            _folder = Path.Combine(_webHostEnvironment.WebRootPath, @"Files\thumbnail\");
         }
+
+        // 大頭貼資料夾存取路徑
+        public string FolderPath { get; set; }
+
+        // 大頭貼路徑組成
+        public string ThumbnailPath { get; set; }
+
+        // 從input file裡取name為thumbnail的值
+        public IFormFile thumbnail { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -63,6 +81,10 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             // 下方為自訂欄位
+
+            [Display(Name = "大頭貼照")]
+            public string ThumbnailName { get; set; }
+
             [Required]
             [DataType(DataType.Text)]
             [Display(Name = "名字")]
@@ -96,7 +118,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             public string Status { get; set; }
 
             public string ThumbnailUrl { get; set; }
-            
+
             [Display(Name = "父親名稱")]
             [DataType(DataType.Text)]
             public string FatherName { get; set; }
@@ -118,6 +140,12 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+
+            // Url.Content呼叫處，如果未來有要改資料夾儲存路徑，修改此處
+            FolderPath = "~/Files/thumbnail/";
+
+            ThumbnailPath = "noThumbnail.png";
+
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -127,21 +155,34 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser {
+                if (thumbnail != null)
+                {
+                    string thumbnailExt = Path.GetExtension(thumbnail.FileName);
+                    string newThumbnailName = Guid.NewGuid().ToString() + thumbnailExt;
+                    Input.ThumbnailName = newThumbnailName;
+                    string newThumbNailSavePath = _folder + newThumbnailName;
+                    await SavePhotoToFileAsync(newThumbNailSavePath);
+
+                }
+
+                var user = new ApplicationUser
+                {
                     UserName = Input.Email,
                     Email = Input.Email,
-                    Address=Input.Address,
-                    BirthDate=Input.BirthDate,
-                    CreateDate=DateTime.Now,
-                    Enrollment=Input.Enrollment,
-                    FatherName=Input.FatherName,
-                    FirstName=Input.FirstName,
-                    Gender=Input.Gender,
-                    Grade=Input.Grade,
-                    LastName=Input.LastName,
-                    MotherName=Input.MotherName,
-                    Status=Input.Status,                    
+                    ThumbnailName = Input.ThumbnailName,
+                    Address = Input.Address,
+                    BirthDate = Input.BirthDate,
+                    CreateDate = DateTime.Now,
+                    Enrollment = Input.Enrollment,
+                    FatherName = Input.FatherName,
+                    FirstName = Input.FirstName,
+                    Gender = Input.Gender,
+                    Grade = Input.Grade,
+                    LastName = Input.LastName,
+                    MotherName = Input.MotherName,
+                    Status = Input.Status,
                 };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -176,6 +217,15 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task SavePhotoToFileAsync(string newThumbNailSavePath)
+        {
+            using (FileStream fs = new FileStream(newThumbNailSavePath, FileMode.Create))
+            {
+                // 直接覆蓋檔案名稱，覆蓋原檔案
+                await thumbnail.CopyToAsync(fs);
+            }
         }
     }
 }

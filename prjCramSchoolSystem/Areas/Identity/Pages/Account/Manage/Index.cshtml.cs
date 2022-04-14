@@ -158,81 +158,101 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-            // HttpPost方法(修改)
-            public async Task<IActionResult> OnPostAsync()
+        // HttpPost方法(修改)
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
             {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null)
-                {
-                    return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'.");
-                }
+                return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'.");
+            }
 
-                if (!ModelState.IsValid)
-                {
-                    await LoadAsync(user);
-                    return Page();
-                }
+            if (!ModelState.IsValid)
+            {
+                await LoadAsync(user);
+                return Page();
+            }
 
-                var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-                if (Input.PhoneNumber != phoneNumber)
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            if (Input.PhoneNumber != phoneNumber)
+            {
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                if (!setPhoneResult.Succeeded)
                 {
-                    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                    if (!setPhoneResult.Succeeded)
-                    {
-                        StatusMessage = "嘗試設定電話號碼時發生未預期錯誤";
-                        return RedirectToPage();
-                    }
+                    StatusMessage = "嘗試設定電話號碼時發生未預期錯誤";
+                    return RedirectToPage();
                 }
-                // 如果資料有更新，更新欄位
-                if (Input.Address != user.Address)
-                    user.Address = Input.Address;
-                if (Input.BirthDate != user.BirthDate)
-                    user.BirthDate = Input.BirthDate;
-                //資料創建日期不給更改
-                //if (Input.CreateDate != user.CreateDate)
-                //    user.CreateDate = Input.CreateDate;
-                if (Input.Enrollment != user.Enrollment)
-                    user.Enrollment = Input.Enrollment;
-                if (Input.FatherName != user.FatherName)
-                    user.FatherName = Input.FatherName;
-                if (Input.FirstName != user.FirstName)
-                    user.FirstName = Input.FirstName;
-                if (Input.Gender != user.Gender)
-                    user.Gender = Input.Gender;
-                if (Input.Grade != user.Grade)
-                    user.Grade = Input.Grade;
-                if (Input.LastName != user.LastName)
-                    user.LastName = Input.LastName;
-                if (Input.MotherName != user.MotherName)
-                    user.MotherName = Input.MotherName;
-                //就學狀態需討論
-                //if (Input.Status != user.Status)
+            }
+            // 如果資料有更新，更新欄位
+            if (Input.Address != user.Address)
+                user.Address = Input.Address;
+            if (Input.BirthDate != user.BirthDate)
+                user.BirthDate = Input.BirthDate;
+            //資料創建日期不給更改
+            //if (Input.CreateDate != user.CreateDate)
+            //    user.CreateDate = Input.CreateDate;
+            if (Input.Enrollment != user.Enrollment)
+                user.Enrollment = Input.Enrollment;
+            if (Input.FatherName != user.FatherName)
+                user.FatherName = Input.FatherName;
+            if (Input.FirstName != user.FirstName)
+                user.FirstName = Input.FirstName;
+            if (Input.Gender != user.Gender)
+                user.Gender = Input.Gender;
+            if (Input.Grade != user.Grade)
+                user.Grade = Input.Grade;
+            if (Input.LastName != user.LastName)
+                user.LastName = Input.LastName;
+            if (Input.MotherName != user.MotherName)
+                user.MotherName = Input.MotherName;
+            //就學狀態需討論
+            //if (Input.Status != user.Status)
 
             // 最初沒有照片時的上傳
             // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
             if (thumbnail != null && String.IsNullOrEmpty(user.ThumbnailName))
             {
+                // 取得附檔名
                 string thumbnailExt = Path.GetExtension(thumbnail.FileName);
+                // 建立新檔案名稱，後面加上附檔名
                 string newThumbnailName = Guid.NewGuid().ToString() + thumbnailExt;
+                // 更新資料庫抓到的檔案名稱
                 user.ThumbnailName = newThumbnailName;
-                await thumbnail.CopyToAsync(new FileStream(_folder + newThumbnailName, FileMode.Create));
+                // 建立完整的檔案上傳路徑
+                string newThumbNailSavePath = _folder + newThumbnailName;
+                await SavePhotoToFileAsync(newThumbNailSavePath);
             }
             // 當資料庫有存檔案位置，但有更新檔案
             else if (thumbnail != null && !String.IsNullOrEmpty(user.ThumbnailName))
-                // 直接覆蓋檔案名稱，覆蓋原檔案
-                await thumbnail.CopyToAsync(new FileStream(_folder + user.ThumbnailName, FileMode.Create));
+            {
+                // 原寫法
+                //await thumbnail.CopyToAsync(new FileStream(_folder + user.ThumbnailName, FileMode.Create));
+
+                // 建立完整的檔案上傳路徑
+                string newThumbNailSavePath = _folder + user.ThumbnailName;
+                // 使用Using，FileStream結束後釋放資源
+                await SavePhotoToFileAsync(newThumbNailSavePath);
+            }
 
 
+            // 直接更新更改時間，不經過input
+            user.UpdateDate = DateTime.Now;
 
-                // 直接更新更改時間，不經過input
-                user.UpdateDate = DateTime.Now;
 
-
-                await _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "您的個人資料已更新成功";
             return RedirectToPage();
+        }
+
+        private async Task SavePhotoToFileAsync(string newThumbNailSavePath)
+        {
+            using (FileStream fs = new FileStream(newThumbNailSavePath, FileMode.Create))
+            {
+                // 直接覆蓋檔案名稱，覆蓋原檔案
+                await thumbnail.CopyToAsync(fs);
+            }
         }
     }
 }
