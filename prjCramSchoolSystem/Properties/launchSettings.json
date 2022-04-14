@@ -13,8 +13,12 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+<<<<<<<<< Temporary merge branch 1
       }
     }
+    },
+      "sqlDebugging": false,
+      "jsWebView2Debugging": false
     },
     "prjCramSchoolSystem": {
       "commandName": "Project",

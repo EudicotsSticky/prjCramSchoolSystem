@@ -110,6 +110,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
         }
 
 
+>>>>>>>>> Temporary merge branch 2
         // 載入方法，被後續方法呼叫
         private async Task LoadAsync(ApplicationUser user)
         {
@@ -143,8 +144,8 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             if (String.IsNullOrEmpty(Input.ThumbnailName))
                 ThumbnailPath = "noThumbnail.png";
             ThumbnailPath = user.ThumbnailName;
-        }
 
+>>>>>>>>> Temporary merge branch 2
         // HttpGet方式取得資料
         public async Task<IActionResult> OnGetAsync()
         {
@@ -208,7 +209,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 user.MotherName = Input.MotherName;
             //就學狀態需討論
             //if (Input.Status != user.Status)
-            //    user.Status = Input.Status;
 
             // 最初沒有照片時的上傳
             // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
@@ -221,9 +221,10 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             }
             // 當資料庫有存檔案位置，但有更新檔案
             else if(thumbnail != null && !String.IsNullOrEmpty(user.ThumbnailName))
-            {
+            if (Input.ThumbnailName != user.ThumbnailName)
                 // 直接覆蓋檔案名稱，覆蓋原檔案
                 await thumbnail.CopyToAsync(new FileStream(_folder + user.ThumbnailName, FileMode.Create));
+
             }
 
             // 直接更新更改時間，不經過input
