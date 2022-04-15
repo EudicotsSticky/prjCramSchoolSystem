@@ -1,7 +1,7 @@
 ﻿@page
 @model GenerateRecoveryCodesModel
 @{
-    ViewData["Title"] = "Generate two-factor authentication (2FA) recovery codes";
+    ViewData["Title"] = "產生二階段驗證(2FA)備用碼";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
@@ -10,18 +10,18 @@
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>Put these codes in a safe place.</strong>
+        <strong>請妥善保存此備用碼。</strong>
     </p>
     <p>
-        If you lose your device and don't have the recovery codes you will lose access to your account.
+如果您遺失裝置且無備用碼，您將無法登入帳號。
     </p>
     <p>
-        Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+        產生備用碼並不會改變您二階段驗證App登記的金鑰，如果您想要改變金鑰，您應該至
+        <a asp-page="./ResetAuthenticator">此處</a>重設金鑰。
     </p>
 </div>
 <div>
     <form method="post" class="form-group">
-        <button class="btn btn-danger" type="submit">Generate Recovery Codes</button>
+        <button class="btn btn-danger" type="submit">產生備用碼</button>
     </form>
 </div>

@@ -70,14 +70,14 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "{0}必須至少包含{2}字且最多不超過{1}字。", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "密碼")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "密碼確認")]
+            [Compare("Password", ErrorMessage = "兩次輸入密碼並不相符。")]
             public string ConfirmPassword { get; set; }
 
             // 下方為自訂欄位
@@ -196,8 +196,8 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "確認您的信箱",
+                        $"請<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>點擊此處</a>確認您的帳號。");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

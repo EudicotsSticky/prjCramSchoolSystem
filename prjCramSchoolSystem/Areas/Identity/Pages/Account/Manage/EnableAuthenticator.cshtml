@@ -1,23 +1,26 @@
 ﻿@page
 @model EnableAuthenticatorModel
 @{
-    ViewData["Title"] = "Configure authenticator app";
+    ViewData["Title"] = "設定二階段驗證App";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
 <h4>@ViewData["Title"]</h4>
 <div>
-    <p>To use an authenticator app go through the following steps:</p>
+    <p>如需使用二階段驗證App，請按以下步驟操作：</p>
     <ol class="list">
         <li>
             <p>
-                Download a two-factor authenticator app like Microsoft Authenticator for
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
-                Google Authenticator for
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
-                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                請下載二階段驗證App如：
+                <br />
+                Microsoft Authenticator(
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android版</a>)(
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS版</a>)
+            </p>
+            <p>或Google Authenticator(
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android版</a>)(
+                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS版</a>)。
             </p>
         </li>
         <li>
