@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Areas\**" />
+    <Compile Remove="wwwroot\lib\davidshimjs-qrcodejs-04f46c6\**" />
     <Content Remove="Controllers\Areas\**" />
+    <Content Remove="wwwroot\lib\davidshimjs-qrcodejs-04f46c6\**" />
     <EmbeddedResource Remove="Controllers\Areas\**" />
+    <EmbeddedResource Remove="wwwroot\lib\davidshimjs-qrcodejs-04f46c6\**" />
     <None Remove="Controllers\Areas\**" />
+    <None Remove="wwwroot\lib\davidshimjs-qrcodejs-04f46c6\**" />
   </ItemGroup>
 
   <ItemGroup>

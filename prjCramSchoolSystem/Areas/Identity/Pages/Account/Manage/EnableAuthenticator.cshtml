@@ -18,31 +18,31 @@
                 <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android版</a>)(
                 <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS版</a>)
             </p>
-            <p>或Google Authenticator(
+            <p>
+                或Google Authenticator(
                 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android版</a>)(
                 <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS版</a>)。
             </p>
         </li>
         <li>
-            <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-            <div class="alert alert-info">Learn how to <a href="https://go.microsoft.com/fwlink/?Linkid=852423">enable QR code generation</a>.</div>
+            <p>掃描QRcode新增二階段驗證</p>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(@Model.AuthenticatorUri)"></div>
+            <br />
         </li>
         <li>
             <p>
-                Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
-                with a unique code. Enter the code in the confirmation box below.
+                一旦您掃描QRcode啟用驗證，您的二階段驗證App將提供您一組唯一碼，請於下方輸入該碼進行驗證。
             </p>
             <div class="row">
                 <div class="col-md-6">
                     <form id="send-code" method="post">
                         <div class="form-group">
-                            <label asp-for="Input.Code" class="control-label">Verification Code</label>
+                            <label asp-for="Input.Code" class="control-label">驗證唯一碼</label>
                             <input asp-for="Input.Code" class="form-control" autocomplete="off" />
                             <span asp-validation-for="Input.Code" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary">Verify</button>
+                        <button type="submit" class="btn btn-primary">驗證</button>
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     </form>
                 </div>
@@ -53,4 +53,6 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/lib/qrcode.js"></script>
+    <script type="text/javascript" src="~/js/qr.js"></script>
 }
