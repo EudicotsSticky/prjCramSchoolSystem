@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using prjCramSchoolSystem.Data;
+using prjCramSchoolSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,8 +71,11 @@ namespace prjCramSchoolSystem
                 // 允許使用者名稱為：
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = false;
+                options.User.RequireUniqueEmail = true;
             });
+
+            // 加入信箱驗證服務
+            services.AddTransient<IEmailSender, SendEmail>();
 
             // 加入cookie服務
             services.ConfigureApplicationCookie(options =>
