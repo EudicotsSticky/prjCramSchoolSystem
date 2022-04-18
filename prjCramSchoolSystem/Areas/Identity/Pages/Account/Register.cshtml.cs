@@ -64,6 +64,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            // 更改預設註冊Username
+            [Required]
+            [Display(Name ="帳號")]
+            public string Username { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -164,10 +169,10 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                     await SavePhotoToFileAsync(newThumbNailSavePath);
 
                 }
-
+                
                 var user = new ApplicationUser
                 {
-                    UserName = Input.Email,
+                    UserName = Input.Username,
                     Email = Input.Email,
                     ThumbnailName = Input.ThumbnailName,
                     Address = Input.Address,

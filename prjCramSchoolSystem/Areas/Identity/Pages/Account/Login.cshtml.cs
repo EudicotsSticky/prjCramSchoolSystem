@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using prjCramSchoolSystem.Data;
+using System.Net.Mail;
 
 namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
 {
@@ -44,15 +45,28 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [Display(Name ="帳號 / 信箱")]
+            public string LoginInput { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name ="密碼")]
             public string Password { get; set; }
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+        }
+        public bool IsValidEmail(string emailAddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailAddress);
+                return true;
+            }
+            catch(FormatException)
+            {
+                return false;
+            }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -80,9 +94,17 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
         
             if (ModelState.IsValid)
             {
+                var userName = Input.LoginInput;
+                if (IsValidEmail(Input.LoginInput))
+                {
+                    var user = await _userManager.FindByEmailAsync(Input.LoginInput);
+                    if (user != null)
+                        userName = user.UserName;
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

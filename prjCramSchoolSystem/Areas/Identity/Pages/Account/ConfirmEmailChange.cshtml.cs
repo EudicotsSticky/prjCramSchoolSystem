@@ -48,14 +48,15 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            // In our UI email and user name are one and the same, so when we update the email
-            // we need to update the user name.
-            var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
-            if (!setUserNameResult.Succeeded)
-            {
-                StatusMessage = "Error changing user name.";
-                return Page();
-            }
+            // 此處不需要，因為已經將Username與Email分開
+            //// In our UI email and user name are one and the same, so when we update the email
+            //// we need to update the user name.
+            //var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
+            //if (!setUserNameResult.Succeeded)
+            //{
+            //    StatusMessage = "Error changing user name.";
+            //    return Page();
+            //}
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Thank you for confirming your email change.";
