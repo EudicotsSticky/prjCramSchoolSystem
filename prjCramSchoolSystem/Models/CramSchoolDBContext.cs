@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -18,17 +17,19 @@ namespace prjCramSchoolSystem.Models
         {
         }
 
-        public virtual DbSet<TStudentProfile> TStudentProfiles { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RoleClaim> RoleClaims { get; set; }
+        public virtual DbSet<StudentProfile> StudentProfiles { get; set; }
+        public virtual DbSet<TParentProfile> TParentProfiles { get; set; }
+        public virtual DbSet<UserClaim> UserClaims { get; set; }
+        public virtual DbSet<UserLogin> UserLogins { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<UserToken> UserTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot Configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("CramSchoolDB"));
             }
         }
 
@@ -36,73 +37,154 @@ namespace prjCramSchoolSystem.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
 
-            modelBuilder.Entity<TStudentProfile>(entity =>
+            modelBuilder.Entity<Role>(entity =>
             {
-                entity.HasKey(e => e.FId);
+                entity.ToTable("Role", "Identity");
 
-                entity.ToTable("tStudentProfile");
+                entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedName] IS NOT NULL)");
 
-                entity.Property(e => e.FId).HasColumnName("fID");
+                entity.Property(e => e.Name).HasMaxLength(256);
 
-                entity.Property(e => e.FAccount)
-                    .HasMaxLength(10)
-                    .HasColumnName("fAccount");
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
 
-                entity.Property(e => e.FAddress)
-                    .HasMaxLength(50)
-                    .HasColumnName("fAddress");
+            modelBuilder.Entity<RoleClaim>(entity =>
+            {
+                entity.ToTable("RoleClaims", "Identity");
 
-                entity.Property(e => e.FBirthDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("fBirthDate");
+                entity.HasIndex(e => e.RoleId, "IX_RoleClaims_RoleId");
+
+                entity.Property(e => e.RoleId).IsRequired();
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.RoleClaims)
+                    .HasForeignKey(d => d.RoleId);
+            });
+
+            modelBuilder.Entity<StudentProfile>(entity =>
+            {
+                entity.ToTable("StudentProfile", "Identity");
+
+                entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
+
+                entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<TParentProfile>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tParentProfile");
 
                 entity.Property(e => e.FCreateDate)
-                    .HasColumnType("datetime")
+                    .HasMaxLength(50)
                     .HasColumnName("fCreateDate");
 
-                entity.Property(e => e.FEmail)
-                    .HasMaxLength(50)
-                    .HasColumnName("fEmail");
+                entity.Property(e => e.FId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("fId");
 
-                entity.Property(e => e.FEnrollment)
+                entity.Property(e => e.FPaccount)
+                    .IsRequired()
                     .HasMaxLength(50)
-                    .HasColumnName("fEnrollment");
+                    .HasColumnName("fPAccount");
 
-                entity.Property(e => e.FGender)
+                entity.Property(e => e.FPemail)
                     .HasMaxLength(50)
-                    .HasColumnName("fGender");
+                    .HasColumnName("fPEmail");
 
-                entity.Property(e => e.FGrade)
+                entity.Property(e => e.FPpassword)
+                    .IsRequired()
                     .HasMaxLength(50)
-                    .HasColumnName("fGrade");
+                    .HasColumnName("fPPassword");
 
-                entity.Property(e => e.FName)
-                    .HasMaxLength(20)
-                    .HasColumnName("fName");
-
-                entity.Property(e => e.FParentName)
+                entity.Property(e => e.FPphone)
                     .HasMaxLength(50)
-                    .HasColumnName("fParentName");
+                    .HasColumnName("fPPhone");
 
-                entity.Property(e => e.FPassword)
+                entity.Property(e => e.FPtel)
                     .HasMaxLength(50)
-                    .HasColumnName("fPassword");
+                    .HasColumnName("fPTel");
 
-                entity.Property(e => e.FPhone)
+                entity.Property(e => e.FPthumbnail)
                     .HasMaxLength(50)
-                    .HasColumnName("fPhone");
+                    .HasColumnName("fPThumbnail");
 
-                entity.Property(e => e.FStatus)
+                entity.Property(e => e.FRelation)
                     .HasMaxLength(50)
-                    .HasColumnName("fStatus");
-
-                entity.Property(e => e.FThumbnailUrl)
-                    .HasMaxLength(50)
-                    .HasColumnName("fThumbnailUrl");
+                    .HasColumnName("fRelation");
 
                 entity.Property(e => e.FUpdateDate)
-                    .HasColumnType("datetime")
+                    .HasMaxLength(50)
                     .HasColumnName("fUpdateDate");
+            });
+
+            modelBuilder.Entity<UserClaim>(entity =>
+            {
+                entity.ToTable("UserClaims", "Identity");
+
+                entity.HasIndex(e => e.UserId, "IX_UserClaims_UserId");
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<UserLogin>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.ToTable("UserLogins", "Identity");
+
+                entity.HasIndex(e => e.UserId, "IX_UserLogins_UserId");
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.ToTable("UserRoles", "Identity");
+
+                entity.HasIndex(e => e.RoleId, "IX_UserRoles_RoleId");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<UserToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+                entity.ToTable("UserTokens", "Identity");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserTokens)
+                    .HasForeignKey(d => d.UserId);
             });
 
             OnModelCreatingPartial(modelBuilder);

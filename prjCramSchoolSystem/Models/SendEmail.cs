@@ -30,6 +30,9 @@ namespace prjCramSchoolSystem.Models
             // 設定HTML內容
             bodyBuilder.HtmlBody = htmlMessage;
 
+            emailMessage.Body = bodyBuilder.ToMessageBody();
+         
+
             using (SmtpClient smtpClient = new SmtpClient())
             {
                 // SMTP主機：smtp.gmail.com

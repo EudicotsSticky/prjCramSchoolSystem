@@ -32,6 +32,12 @@ namespace prjCramSchoolSystem
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<CramSchoolDBContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("CramSchoolDB")));
+
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
