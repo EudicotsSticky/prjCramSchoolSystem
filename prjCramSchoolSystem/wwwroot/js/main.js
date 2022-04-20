@@ -190,17 +190,17 @@
     /*------------------
         Single Product
     --------------------*/
-    //$('.product__details__thumb img').on('click', function () {
-    //    $('.product__details__thumb .pt__item').removeClass('active');
-    //    $(this).addClass('active');
-    //    var imgurl = $(this).data('imgbigurl');
-    //    var bigImg = $('.big_img').attr('src');
-    //    if (imgurl != bigImg) {
-    //        $('.big_img').attr({
-    //            src: imgurl
-    //        });
-    //    }
-    //});
+    $('.product__details__thumb img').on('click', function () {
+        $('.product__details__thumb .pt__item').removeClass('active');
+        $(this).addClass('active');
+        var imgurl = $(this).data('imgbigurl');
+        var bigImg = $('.big_img').attr('src');
+        if (imgurl != bigImg) {
+            $('.big_img').attr({
+                src: imgurl
+            });
+        }
+    });
 
     /*-------------------
         Quantity change
