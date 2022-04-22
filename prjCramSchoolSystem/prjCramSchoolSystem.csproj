@@ -345,7 +345,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="wwwroot\Files\" />
     <Folder Include="wwwroot\Files\thumbnail\" />
   </ItemGroup>
 

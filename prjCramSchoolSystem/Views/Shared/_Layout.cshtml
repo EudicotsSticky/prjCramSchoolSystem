@@ -93,11 +93,9 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Index">首頁</a></li>
-                            <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
                             <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Index">課程購買</a></li>
-                            <li class="text-nowrap"><a asp-area="" asp-controller="RoleManager" asp-action="Index">身分新增及刪除</a></li>
 
-                            <li>
+                            @*<li>
                                 <a href="#" class="text-nowrap">頁面</a>
                                 <ul class="dropdown">
                                     <li class="text-nowrap"><a href="./shop-details.html">訂單明細</a></li>
@@ -107,9 +105,12 @@
                                     <li class="text-nowrap"><a href="./Class.html">課程</a></li>
                                     <li class="text-nowrap"><a href="./blog-details.html">部落格詳細</a></li>
                                 </ul>
-                            </li>
+                            </li>*@
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">討論區</a></li>
+                            <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Privacy">隱私權政策</a></li>
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">聯繫我們</a></li>
+                            @*<li class="text-nowrap"><a asp-area="" asp-controller="RoleManager" asp-action="Index">身分權限管理</a></li>*@
+
                         </ul>
                     </nav>
                 </div>
@@ -117,7 +118,7 @@
         </div>
     </header>
     <!-- Header Section End -->
-            @RenderBody()
+    @RenderBody()
 
     <!-- Footer Section Begin -->
     <footer class="footer set-bg" data-setbg="@Url.Content("~/img/footer-bg.jpg")">
@@ -189,13 +190,13 @@
     <!-- Footer Section End -->
     <!-- Search Begin -->
     <div class="search-model">
-            <div class="h-100 d-flex align-items-center justify-content-center">
-                <div class="search-close-switch">+</div>
-                <form class="search-model-form">
-                    <input type="text" id="search-input" placeholder="Search here.....">
-                </form>
-            </div>
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
         </div>
+    </div>
     <!-- Search End -->
     <!-- Js Plugins -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
