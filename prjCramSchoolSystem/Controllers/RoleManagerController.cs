@@ -19,7 +19,7 @@ namespace prjCramSchoolSystem.Controllers
         }
 
         // GET: RoleManagerController 顯示所有的身分
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var roles = await _roleManager.Roles.ToListAsync();
             return View(roles);
@@ -28,11 +28,11 @@ namespace prjCramSchoolSystem.Controllers
         // POST: RoleManagerController/AddRole 新增身分
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task< ActionResult> AddRole(string roleName)
+        public async Task<IActionResult> AddRole(string roleName)
         {
             try
             {
-                if(roleName != null)
+                if (roleName != null)
                 {
                     // 移除目前roleName開頭和結尾的所有空白字元(整理格式)，加入身分
                     await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
@@ -40,7 +40,7 @@ namespace prjCramSchoolSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View();
             }
