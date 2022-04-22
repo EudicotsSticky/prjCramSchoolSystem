@@ -20,7 +20,6 @@ namespace prjCramSchoolSystem.Models
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<RoleClaim> RoleClaims { get; set; }
         public virtual DbSet<StudentProfile> StudentProfiles { get; set; }
-        public virtual DbSet<TParentProfile> TParentProfiles { get; set; }
         public virtual DbSet<UserClaim> UserClaims { get; set; }
         public virtual DbSet<UserLogin> UserLogins { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
@@ -80,55 +79,6 @@ namespace prjCramSchoolSystem.Models
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
-            });
-
-            modelBuilder.Entity<TParentProfile>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("tParentProfile");
-
-                entity.Property(e => e.FCreateDate)
-                    .HasMaxLength(50)
-                    .HasColumnName("fCreateDate");
-
-                entity.Property(e => e.FId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("fId");
-
-                entity.Property(e => e.FPaccount)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("fPAccount");
-
-                entity.Property(e => e.FPemail)
-                    .HasMaxLength(50)
-                    .HasColumnName("fPEmail");
-
-                entity.Property(e => e.FPpassword)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("fPPassword");
-
-                entity.Property(e => e.FPphone)
-                    .HasMaxLength(50)
-                    .HasColumnName("fPPhone");
-
-                entity.Property(e => e.FPtel)
-                    .HasMaxLength(50)
-                    .HasColumnName("fPTel");
-
-                entity.Property(e => e.FPthumbnail)
-                    .HasMaxLength(50)
-                    .HasColumnName("fPThumbnail");
-
-                entity.Property(e => e.FRelation)
-                    .HasMaxLength(50)
-                    .HasColumnName("fRelation");
-
-                entity.Property(e => e.FUpdateDate)
-                    .HasMaxLength(50)
-                    .HasColumnName("fUpdateDate");
             });
 
             modelBuilder.Entity<UserClaim>(entity =>

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace prjCramSchoolSystem.Models
+namespace prjCramSchoolSystem.Models.RoleViewModels
 {
     // 此ViewModel用來記錄使用者與其權限，其中權限列舉於Enums/Roles.cs中
     public class UserRolesViewModel
