@@ -64,10 +64,10 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "Confirm your email：確認信",
+                $"請<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>點擊此處</a>驗證您的帳號。");
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            ModelState.AddModelError(string.Empty, "驗證信已經寄出，請至信箱進行確認。");
             return Page();
         }
     }

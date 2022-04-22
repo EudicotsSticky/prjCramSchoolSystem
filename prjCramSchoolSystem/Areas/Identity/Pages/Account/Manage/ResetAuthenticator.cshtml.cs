@@ -53,7 +53,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
             
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";
+            StatusMessage = "您的二階段驗證金鑰已重設，請至驗證App輸入金鑰來重新設定。";
 
             return RedirectToPage("./EnableAuthenticator");
         }

@@ -31,7 +31,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"無法載入使用者 '{_userManager.GetUserId(User)}'.");
             }
 
             if (!await _userManager.GetTwoFactorEnabledAsync(user))
@@ -47,7 +47,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"查無使用者 '{_userManager.GetUserId(User)}'。");
             }
 
             var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
@@ -56,8 +56,8 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 throw new InvalidOperationException($"Unexpected error occurred disabling 2FA for user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
-            StatusMessage = "2fa has been disabled. You can reenable 2fa when you setup an authenticator app";
+            _logger.LogInformation("使用者 '{UserId}' 已取消二階段驗證。", _userManager.GetUserId(User));
+            StatusMessage = "二階段驗證功能已被取消，如需再重新開啟請至驗證App重新設定。";
             return RedirectToPage("./TwoFactorAuthentication");
         }
     }

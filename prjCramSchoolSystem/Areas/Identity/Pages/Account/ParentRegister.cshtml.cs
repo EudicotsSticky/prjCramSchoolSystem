@@ -14,30 +14,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using prjCramSchoolSystem.Data;
-using prjCramSchoolSystem.Enums;
 
 namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class RegisterModel : PageModel
+    public class ParentRegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
+        private readonly ILogger<ParentRegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _folder;
-        public IList<SelectListItem> UserRoles;
 
-
-        public RegisterModel(
+        public ParentRegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
+            ILogger<ParentRegisterModel> logger,
             IEmailSender emailSender,
             IWebHostEnvironment webHostEnvironment)
         {
@@ -48,11 +44,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             _webHostEnvironment = webHostEnvironment;
             // 把上傳目錄設為：wwwroot\Files\thumbnail
             _folder = Path.Combine(_webHostEnvironment.WebRootPath, @"Files\thumbnail\");
-            UserRoles = new List<SelectListItem>
-            {
-                new SelectListItem{Value=Roles.Default.ToString(),Text="我是學生"},
-                new SelectListItem{Value=Roles.Parent.ToString(),Text="我是家長"}
-            };
         }
 
         // 大頭貼資料夾存取路徑
@@ -113,14 +104,25 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             [Display(Name = "性別")]
             public string Gender { get; set; }
 
-            [Required]
-            [Display(Name = "請選擇身分")]
-            public string UserRole { get; set; }
-            public string ThumbnailUrl { get; set; }
+            [DataType(DataType.Date)]
+            [Display(Name = "生日")]
+            public DateTime? BirthDate { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "通訊地址")]
+            public string Address { get; set; }
+
+            [Display(Name = "子女名稱")]
+            public ICollection<ApplicationUser> ChildNames { get; set; }
 
             [Display(Name = "個人資料建立日期")]
             [DataType(DataType.Date)]
             public DateTime? CreateDate { get; set; }
+
+            [Display(Name = "最後更新日期")]
+            [DataType(DataType.Date)]
+            public DateTime? UpdateDate { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -156,18 +158,20 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                     UserName = Input.Username,
                     Email = Input.Email,
                     ThumbnailName = Input.ThumbnailName,
+                    Address = Input.Address,
+                    BirthDate = Input.BirthDate,
                     CreateDate = DateTime.Now,
                     FirstName = Input.FirstName,
                     Gender = Input.Gender,
-                    LastName = Input.LastName,
+                    LastName = Input.LastName
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("成功建立帳號密碼。");
-                    // 註冊時給予身分
-                    await _userManager.AddToRoleAsync(user, Input.UserRole);
+                    _logger.LogInformation("User created a new account with password.");
+                    // 註冊時給予預設的身分
+                    await _userManager.AddToRoleAsync(user, Enums.Roles.Default.ToString());
                     // 產生確認信token
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

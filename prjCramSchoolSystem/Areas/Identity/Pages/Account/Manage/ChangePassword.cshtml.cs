@@ -93,7 +93,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "密碼修改完成。";
 
             return RedirectToPage();
         }

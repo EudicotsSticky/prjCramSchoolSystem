@@ -59,5 +59,8 @@ namespace prjCramSchoolSystem.Data
         [Display(Name = "最後更新日期")]
         [PersonalData]
         public DateTime? UpdateDate { get; set; }
+
+        // 建立父母帳號時，記錄小孩名稱
+        public virtual ICollection<ApplicationUser> ChildNames { get; set; }
     }
 }

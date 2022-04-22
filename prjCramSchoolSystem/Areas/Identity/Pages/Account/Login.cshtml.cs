@@ -53,7 +53,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             [Display(Name ="密碼")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "記住我？")]
             public bool RememberMe { get; set; }
         }
         public bool IsValidEmail(string emailAddress)
@@ -63,7 +63,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 MailAddress m = new MailAddress(emailAddress);
                 return true;
             }
-            catch(FormatException)
+            catch(FormatException ex)
             {
                 return false;
             }
@@ -116,7 +116,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("使用者已被鎖定。");
                     return RedirectToPage("./Lockout");
                 }
                 else

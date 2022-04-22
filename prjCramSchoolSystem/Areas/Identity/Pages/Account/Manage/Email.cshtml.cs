@@ -103,13 +103,13 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email：確認信",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"請<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>點擊此處</a>確認新的郵件地址。");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "確認信已寄送，請至新信箱確認。";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "您的信箱尚未修改。";
             return RedirectToPage();
         }
 
@@ -138,10 +138,10 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "確認信",
+                $"請<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>點擊此處</a>進行信箱驗證。");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "驗證信已送出，請至信箱進行確認。";
             return RedirectToPage();
         }
     }

@@ -44,7 +44,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
             {
-                StatusMessage = "Error changing email.";
+                StatusMessage = "信箱更改發生錯誤，請稍後重試。";
                 return Page();
             }
 
@@ -59,7 +59,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             //}
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Thank you for confirming your email change.";
+            StatusMessage = "您的信箱已更改成功。";
             return Page();
         }
     }

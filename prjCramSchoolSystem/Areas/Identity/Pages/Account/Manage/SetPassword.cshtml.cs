@@ -85,7 +85,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your password has been set.";
+            StatusMessage = "密碼設定成功。";
 
             return RedirectToPage();
         }

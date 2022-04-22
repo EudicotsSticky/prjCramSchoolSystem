@@ -140,9 +140,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             FolderPath = "~/Files/thumbnail/";
 
             // 如果完全無存入照片，使用預設照片
-            if (String.IsNullOrEmpty(Input.ThumbnailName))
+            if (!String.IsNullOrEmpty(user.ThumbnailName))
+                ThumbnailPath = user.ThumbnailName;
+            else
                 ThumbnailPath = "noThumbnail.png";
-            ThumbnailPath = user.ThumbnailName;
+
         }
         // HttpGet方式取得資料
         public async Task<IActionResult> OnGetAsync()
@@ -184,13 +186,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 }
             }
             // 如果資料有更新，更新欄位
+            //資料創建日期不給更改
             if (Input.Address != user.Address)
                 user.Address = Input.Address;
             if (Input.BirthDate != user.BirthDate)
                 user.BirthDate = Input.BirthDate;
-            //資料創建日期不給更改
-            //if (Input.CreateDate != user.CreateDate)
-            //    user.CreateDate = Input.CreateDate;
             if (Input.Enrollment != user.Enrollment)
                 user.Enrollment = Input.Enrollment;
             if (Input.FatherName != user.FatherName)
@@ -222,12 +222,9 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 string newThumbNailSavePath = _folder + newThumbnailName;
                 await SavePhotoToFileAsync(newThumbNailSavePath);
             }
-            // 當資料庫有存檔案位置，但有更新檔案
+            // 當資料庫有存檔案位置，但有更新頭貼資料
             else if (thumbnail != null && !String.IsNullOrEmpty(user.ThumbnailName))
             {
-                // 原寫法
-                //await thumbnail.CopyToAsync(new FileStream(_folder + user.ThumbnailName, FileMode.Create));
-
                 // 建立完整的檔案上傳路徑
                 string newThumbNailSavePath = _folder + user.ThumbnailName;
                 // 使用Using，FileStream結束後釋放資源
