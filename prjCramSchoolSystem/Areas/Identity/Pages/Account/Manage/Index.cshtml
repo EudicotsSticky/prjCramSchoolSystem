@@ -48,6 +48,10 @@
                         <input asp-for="Input.Grade" class="form-control" />
                     </div>
                     <div class="form-group">
+                        <label asp-for="Input.Status"></label>
+                        <input asp-for="Input.Status" class="form-control" />
+                    </div>
+                    <div class="form-group">
                         <label asp-for="Input.BirthDate"></label>
                         <input asp-for="Input.BirthDate" class="form-control" />
                     </div>
@@ -68,11 +72,11 @@
                         <input asp-for="Input.MotherName" class="form-control" />
                     </div>
                     if (Model.User.IsInRole(Roles.Parent.ToString()))
-                {
-
-                }
+                    {
 
                     }
+
+                }
             }
             <button id="update-profile-button" type="submit" class="btn btn-primary">儲存</button>
         </form>

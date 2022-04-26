@@ -100,10 +100,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             [DataType(DataType.Text)]
             public string MotherName { get; set; }
 
-            [Display(Name = "個人資料建立日期")]
-            [DataType(DataType.Date)]
-            public DateTime? CreateDate { get; set; }
-
             [Display(Name = "最後更新日期")]
             [DataType(DataType.Date)]
             public DateTime? UpdateDate { get; set; }
@@ -125,8 +121,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 LastName = user.LastName,
                 Address = user.Address,
                 BirthDate = user.BirthDate,
-                // CreateDate = user.CreateDate,
-                // 資料創建日期不給更改
                 Enrollment = user.Enrollment,
                 FatherName = user.FatherName,
                 MotherName = user.MotherName,
@@ -186,7 +180,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 }
             }
             // 如果資料有更新，更新欄位
-            //資料創建日期不給更改
             if (Input.Address != user.Address)
                 user.Address = Input.Address;
             if (Input.BirthDate != user.BirthDate)
@@ -205,12 +198,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 user.LastName = Input.LastName;
             if (Input.MotherName != user.MotherName)
                 user.MotherName = Input.MotherName;
-            //就學狀態需討論
-            //if (Input.Status != user.Status)
-
-            // 最初沒有照片時的上傳
-            // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
-            if (thumbnail != null && String.IsNullOrEmpty(user.ThumbnailName))
+            if (Input.Status != user.Status)
+                user.Status = Input.Status;
+                // 最初沒有照片時的上傳
+                // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
+                if (thumbnail != null && String.IsNullOrEmpty(user.ThumbnailName))
             {
                 // 取得附檔名
                 string thumbnailExt = Path.GetExtension(thumbnail.FileName);
