@@ -18,7 +18,7 @@ namespace prjCramSchoolSystem.Data
             base.OnModelCreating(builder);
             builder.HasDefaultSchema("Identity");
             builder.Entity<ApplicationUser>(entity => {
-                entity.ToTable(name: "StudentProfile");
+                entity.ToTable(name: "User");
             });
             builder.Entity<IdentityRole>(entity => {
                 entity.ToTable(name: "Role");

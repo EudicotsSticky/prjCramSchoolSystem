@@ -94,11 +94,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "父親名稱")]
             [DataType(DataType.Text)]
-            public string FatherName { get; set; }
+            public string FatherId { get; set; }
 
             [Display(Name = "母親名稱")]
             [DataType(DataType.Text)]
-            public string MotherName { get; set; }
+            public string MotherId { get; set; }
 
             [Display(Name = "最後更新日期")]
             [DataType(DataType.Date)]
@@ -122,8 +122,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 Address = user.Address,
                 BirthDate = user.BirthDate,
                 Enrollment = user.Enrollment,
-                FatherName = user.FatherName,
-                MotherName = user.MotherName,
                 Gender = user.Gender,
                 Grade = user.Grade,
                 Status = user.Status,
@@ -186,8 +184,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 user.BirthDate = Input.BirthDate;
             if (Input.Enrollment != user.Enrollment)
                 user.Enrollment = Input.Enrollment;
-            if (Input.FatherName != user.FatherName)
-                user.FatherName = Input.FatherName;
             if (Input.FirstName != user.FirstName)
                 user.FirstName = Input.FirstName;
             if (Input.Gender != user.Gender)
@@ -196,8 +192,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 user.Grade = Input.Grade;
             if (Input.LastName != user.LastName)
                 user.LastName = Input.LastName;
-            if (Input.MotherName != user.MotherName)
-                user.MotherName = Input.MotherName;
             if (Input.Status != user.Status)
                 user.Status = Input.Status;
                 // 最初沒有照片時的上傳
