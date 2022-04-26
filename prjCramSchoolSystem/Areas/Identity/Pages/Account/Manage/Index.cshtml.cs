@@ -122,13 +122,14 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 Address = user.Address,
                 BirthDate = user.BirthDate,
                 Enrollment = user.Enrollment,
-                FatherName = user.FatherName,
-                MotherName = user.MotherName,
                 Gender = user.Gender,
                 Grade = user.Grade,
                 Status = user.Status,
                 ThumbnailName = user.ThumbnailName,
                 UpdateDate = user.UpdateDate,
+                FatherName = user.Father.LastName + user.Father.FirstName,
+                MotherName = user.Mother.LastName + user.Mother.FirstName
+
             };
             // Url.Content呼叫處，如果未來有要改資料夾儲存路徑，修改此處
             FolderPath = "~/Files/thumbnail/";
@@ -179,6 +180,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            ApplicationUser originData = user;
             // 如果資料有更新，更新欄位
             if (Input.Address != user.Address)
                 user.Address = Input.Address;
@@ -186,8 +188,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 user.BirthDate = Input.BirthDate;
             if (Input.Enrollment != user.Enrollment)
                 user.Enrollment = Input.Enrollment;
-            if (Input.FatherName != user.FatherName)
-                user.FatherName = Input.FatherName;
             if (Input.FirstName != user.FirstName)
                 user.FirstName = Input.FirstName;
             if (Input.Gender != user.Gender)
@@ -196,13 +196,14 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 user.Grade = Input.Grade;
             if (Input.LastName != user.LastName)
                 user.LastName = Input.LastName;
-            if (Input.MotherName != user.MotherName)
-                user.MotherName = Input.MotherName;
             if (Input.Status != user.Status)
                 user.Status = Input.Status;
-                // 最初沒有照片時的上傳
-                // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
-                if (thumbnail != null && String.IsNullOrEmpty(user.ThumbnailName))
+            if (originData != user)
+                user.UpdateDate = DateTime.Now;
+
+            // 最初沒有照片時的上傳
+            // IFormFile有抓到thumbnail且user.ThumbnailName沒有值，建立新圖片
+            if (thumbnail != null && String.IsNullOrEmpty(user.ThumbnailName))
             {
                 // 取得附檔名
                 string thumbnailExt = Path.GetExtension(thumbnail.FileName);
@@ -222,11 +223,6 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 // 使用Using，FileStream結束後釋放資源
                 await SavePhotoToFileAsync(newThumbNailSavePath);
             }
-
-
-            // 直接更新更改時間，不經過input
-            user.UpdateDate = DateTime.Now;
-
 
             await _userManager.UpdateAsync(user);
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,11 +47,11 @@ namespace prjCramSchoolSystem.Data
 
         [Display(Name = "父親名稱")]
         [PersonalData]
-        public string FatherName { get; set; }
+        public string FatherId { get; set; }
 
         [Display(Name = "母親名稱")]
         [PersonalData]
-        public string MotherName { get; set; }
+        public string MotherId { get; set; }
 
         [Display(Name = "個人資料建立日期")]
         [PersonalData]
@@ -60,7 +61,14 @@ namespace prjCramSchoolSystem.Data
         [PersonalData]
         public DateTime? UpdateDate { get; set; }
 
-        // 建立父母帳號時，記錄小孩名稱
-        public virtual ICollection<ApplicationUser> ChildNames { get; set; }
+        // 學生建立帳號時設立
+        [ForeignKey("FatherId")]
+        public virtual ApplicationUser Father { get; set; }
+
+        [ForeignKey("MotherId")]
+        public virtual ApplicationUser Mother { get; set; }
+
+
+
     }
 }

@@ -63,14 +63,6 @@
                         <label asp-for="Input.Enrollment"></label>
                         <input asp-for="Input.Enrollment" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Input.FatherName"></label>
-                        <input asp-for="Input.FatherName" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Input.MotherName"></label>
-                        <input asp-for="Input.MotherName" class="form-control" />
-                    </div>
                     if (Model.User.IsInRole(Roles.Parent.ToString()))
                     {
 
