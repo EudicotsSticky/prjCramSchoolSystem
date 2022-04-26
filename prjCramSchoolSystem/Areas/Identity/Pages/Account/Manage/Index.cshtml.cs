@@ -94,11 +94,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "父親名稱")]
             [DataType(DataType.Text)]
-            public string FatherName { get; set; }
+            public string FatherId { get; set; }
 
             [Display(Name = "母親名稱")]
             [DataType(DataType.Text)]
-            public string MotherName { get; set; }
+            public string MotherId { get; set; }
 
             [Display(Name = "最後更新日期")]
             [DataType(DataType.Date)]
