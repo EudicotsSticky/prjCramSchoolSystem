@@ -37,52 +37,24 @@ namespace prjCramSchoolSystem.Controllers
         }
 
         // Api:Ajax找，回傳是否有找到家長
-        public async Task<IActionResult> FindFatherAsync(string fatherEmailorUsername)
+        public async Task<IActionResult> FindParentAsync(string parentEmailorUsername)
         {
-            ApplicationUser fatherData = new ApplicationUser();
-            fatherData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(fatherEmailorUsername);
-            if (fatherData != null)
-                return Content($"您的父親為：{fatherData.LastName+fatherData.FirstName}");
+            ApplicationUser parentData = new ApplicationUser();
+            parentData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(parentEmailorUsername);
+            if (parentData != null)
+                return Content($"您的家長為：{parentData.LastName.ToString()+parentData.FirstName.ToString()}");
             else
             return Content("查無此資料");
         }
-
-
-        // GET: ParentBindingController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ParentBindingController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ParentBindingController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
+        
         // POST: ParentBindingController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> ViewParent(ParentBindingModel parentBindingModel)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ViewParent));
             }
             catch
             {
