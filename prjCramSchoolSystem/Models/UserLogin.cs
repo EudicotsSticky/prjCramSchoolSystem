@@ -12,6 +12,6 @@ namespace prjCramSchoolSystem.Models
         public string ProviderDisplayName { get; set; }
         public string UserId { get; set; }
 
-        public virtual StudentProfile User { get; set; }
+        public virtual User User { get; set; }
     }
 }

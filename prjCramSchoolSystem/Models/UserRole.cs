@@ -11,6 +11,6 @@ namespace prjCramSchoolSystem.Models
         public string RoleId { get; set; }
 
         public virtual Role Role { get; set; }
-        public virtual StudentProfile User { get; set; }
+        public virtual User User { get; set; }
     }
 }

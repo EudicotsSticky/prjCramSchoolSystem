@@ -52,6 +52,14 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
         [BindProperty]
         public InputModel Input { get; set; }
 
+        [Display(Name = "父親名稱")]
+        [DataType(DataType.Text)]
+        public string FatherName { get; set; }
+
+        [Display(Name = "母親名稱")]
+        [DataType(DataType.Text)]
+        public string MotherName { get; set; }
+
         public class InputModel
         {
             [Phone]
@@ -91,15 +99,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "大頭貼照")]
             public string ThumbnailName { get; set; }
-
-            [Display(Name = "父親名稱")]
-            [DataType(DataType.Text)]
-            public string FatherName { get; set; }
-
-            [Display(Name = "母親名稱")]
-            [DataType(DataType.Text)]
-            public string MotherName { get; set; }
-
+                        
             [Display(Name = "最後更新日期")]
             [DataType(DataType.Date)]
             public DateTime? UpdateDate { get; set; }
@@ -113,6 +113,10 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            if(user.Father!=null)
+            FatherName = user.Father.LastName + user.Father.FirstName;
+            if (user.Mother  != null)
+                MotherName = user.Mother.LastName + user.Mother.FirstName;
 
             Input = new InputModel
             {
@@ -126,10 +130,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
                 Grade = user.Grade,
                 Status = user.Status,
                 ThumbnailName = user.ThumbnailName,
-                UpdateDate = user.UpdateDate,
-                FatherName = user.Father.LastName + user.Father.FirstName,
-                MotherName = user.Mother.LastName + user.Mother.FirstName
-
+                UpdateDate = user.UpdateDate
             };
             // Url.Content呼叫處，如果未來有要改資料夾儲存路徑，修改此處
             FolderPath = "~/Files/thumbnail/";

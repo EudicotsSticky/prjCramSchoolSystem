@@ -1,0 +1,49 @@
+﻿@model prjCramSchoolSystem.Models.ParentBindingModel.ParentBindingModel
+
+@{
+    ViewData["Title"] = "ViewParent";
+}
+
+<h1>ViewParent</h1>
+
+<h4>ParentBindingModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ViewParent">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="FatherId" />
+            <input type="hidden" asp-for="MotherId" />
+            <div class="form-group">
+                <label asp-for="FatherName" class="control-label"></label>
+                <input asp-for="FatherName" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="FatherEmailorUsername" class="control-label"></label>
+                <input asp-for="FatherEmailorUsername" class="form-control" />
+                <label id="haveFather"></label>
+            </div>
+            <div class="form-group">
+                <label asp-for="MotherName" class="control-label"></label>
+                <input asp-for="MotherName" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="MotherEmailorUsername" class="control-label"></label>
+                <input asp-for="MotherEmailorUsername" class="form-control" />
+                <label id="haveMather"></label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ViewParent">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
