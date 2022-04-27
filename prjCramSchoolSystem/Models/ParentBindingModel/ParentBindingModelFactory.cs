@@ -42,7 +42,6 @@ namespace prjCramSchoolSystem.Models.ParentBindingModel
                 parentData = await _userManager.FindByEmailAsync(nameOrEmail);
             else
                 parentData = await _userManager.FindByNameAsync(nameOrEmail);
-
             return parentData;
         }
 
