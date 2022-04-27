@@ -39,8 +39,11 @@ namespace prjCramSchoolSystem.Models.ParentBindingModel
         {
             ApplicationUser parentData = new ApplicationUser();
             if (IsValidEmail(nameOrEmail))
+            {
                 parentData = await _userManager.FindByEmailAsync(nameOrEmail);
+            }
             else
+            {
                 parentData = await _userManager.FindByNameAsync(nameOrEmail);
 
             return parentData;
