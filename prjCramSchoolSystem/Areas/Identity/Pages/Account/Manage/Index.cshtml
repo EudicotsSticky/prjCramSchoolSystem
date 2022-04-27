@@ -63,10 +63,22 @@
                         <label asp-for="Input.Enrollment"></label>
                         <input asp-for="Input.Enrollment" class="form-control" />
                     </div>
-                    if (Model.User.IsInRole(Roles.Parent.ToString()))
-                    {
-
-                    }
+                    <div class="form-group">
+                        <label asp-for="FatherName"></label>
+                        <input asp-for="FatherName" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MotherName"></label>
+                        <input asp-for="MotherName" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            如家長帳號註冊已完成，請進行<a asp-controller="ParentBinding" asp-action="ViewParent">家長綁定</a>。
+                        </label>
+                    </div>
+                }
+                if (Model.User.IsInRole(Roles.Parent.ToString()))
+                {
 
                 }
             }

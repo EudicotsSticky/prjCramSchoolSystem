@@ -95,6 +95,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var userName = Input.LoginInput;
+                // 如果輸入的是信箱，進入下方判斷
                 if (IsValidEmail(Input.LoginInput))
                 {
                     var user = await _userManager.FindByEmailAsync(Input.LoginInput);

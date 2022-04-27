@@ -5,10 +5,12 @@ using System.Collections.Generic;
 
 namespace prjCramSchoolSystem.Models
 {
-    public partial class StudentProfile
+    public partial class User
     {
-        public StudentProfile()
+        public User()
         {
+            InverseFather = new HashSet<User>();
+            InverseMother = new HashSet<User>();
             UserClaims = new HashSet<UserClaim>();
             UserLogins = new HashSet<UserLogin>();
             UserRoles = new HashSet<UserRole>();
@@ -25,8 +27,6 @@ namespace prjCramSchoolSystem.Models
         public string Grade { get; set; }
         public string Status { get; set; }
         public string ThumbnailName { get; set; }
-        public string FatherName { get; set; }
-        public string MotherName { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string UserName { get; set; }
@@ -43,7 +43,13 @@ namespace prjCramSchoolSystem.Models
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public string MotherId { get; set; }
+        public string FatherId { get; set; }
 
+        public virtual User Father { get; set; }
+        public virtual User Mother { get; set; }
+        public virtual ICollection<User> InverseFather { get; set; }
+        public virtual ICollection<User> InverseMother { get; set; }
         public virtual ICollection<UserClaim> UserClaims { get; set; }
         public virtual ICollection<UserLogin> UserLogins { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
