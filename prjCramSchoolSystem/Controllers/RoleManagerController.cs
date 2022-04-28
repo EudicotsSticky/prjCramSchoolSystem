@@ -48,5 +48,26 @@ namespace prjCramSchoolSystem.Controllers
             }
         }
 
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            try
+            {
+                if (id == null)
+                    return RedirectToAction(nameof(Index));
+                if (id != null)
+                {
+                    var role =await _roleManager.FindByIdAsync(id);
+                    if(role==null)
+                        return RedirectToAction(nameof(Index));
+                    await _roleManager.DeleteAsync(role);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+
+        }
     }
 }

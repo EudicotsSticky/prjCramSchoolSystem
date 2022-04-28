@@ -46,33 +46,40 @@ namespace prjCramSchoolSystem.Controllers
                 if (parentBindingModel == null)
                     return RedirectToAction(nameof(ViewParent));
                 // 建立使用者物件並將資料庫找到的使用者資料填入
-                ApplicationUser user = new ApplicationUser();
-                user = await _userManager.FindByIdAsync(parentBindingModel.Id);
+                ApplicationUser user = await _userManager.FindByIdAsync(parentBindingModel.Id);
                 // 如果找不到使用者，回傳
                 if (user == null)
                     return NotFound("查無此使用者");
                 // 找父親資料
-                ApplicationUser fatherData = new ApplicationUser();
+                ApplicationUser fatherData =null;
+                // text中有輸入資料，使用ParentBindingModelFactory中的方法找父親資料
                 if(!String.IsNullOrEmpty(parentBindingModel.FatherEmailorUsername))
                 fatherData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(parentBindingModel.FatherEmailorUsername);
 
                 // 找母親資料
-                ApplicationUser motherData = new ApplicationUser();
+                ApplicationUser motherData =null;
                 if (!String.IsNullOrEmpty(parentBindingModel.MotherEmailorUsername))
                     motherData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(parentBindingModel.MotherEmailorUsername);
-
-                if (fatherData != null || fatherData.Id != user.FatherId)
-                    user.FatherId = fatherData.Id;
-                if (motherData != null || motherData.Id != user.MotherId)
-                    user.MotherId = motherData.Id;
-
+                if (fatherData != null)
+                {
+                    if (fatherData.Id != user.FatherId)
+                        user.FatherId = fatherData.Id;
+                }
+                if (motherData != null)
+                {
+                    if (motherData.Id != user.MotherId)
+                        user.MotherId = motherData.Id;
+                }
                 await _userManager.UpdateAsync(user);
                 await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction(nameof(ViewParent));
             }
             catch (Exception ex)
             {
+                // 正式使用時註解此行
                 return Content(ex.Message);
+                // 正式使用時採重新導向
+                //RedirectToAction(nameof(ViewParent));
             }
         }
 

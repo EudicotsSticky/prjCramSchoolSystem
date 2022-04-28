@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using prjCramSchoolSystem.Data
+@using prjCramSchoolSystem.Enums
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html lang="zh-tw">
 <head>
     <meta charset="utf-8" />
@@ -15,8 +21,6 @@
           rel="stylesheet">
     <!-- Css Styles -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
-    @*<link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">*@
     <link rel="stylesheet" href="~/css/flaticon.css" type="text/css">
     <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
     <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
@@ -95,17 +99,37 @@
                             <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Index">首頁</a></li>
                             <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Index">課程購買</a></li>
 
-                            @*<li>
-                                <a href="#" class="text-nowrap">頁面</a>
-                                <ul class="dropdown">
-                                    <li class="text-nowrap"><a href="./shop-details.html">訂單明細</a></li>
-                                    <li class="text-nowrap"><a href="./shoping-cart.html">購物車</a></li>
-                                    <li class="text-nowrap"><a href="./checkout.html">確認訂單</a></li>
-                                    <li class="text-nowrap"><a href="./wisslist.html">願望清單</a></li>
-                                    <li class="text-nowrap"><a href="./Class.html">課程</a></li>
-                                    <li class="text-nowrap"><a href="./blog-details.html">部落格詳細</a></li>
-                                </ul>
-                            </li>*@
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), Roles.Default.ToString()))
+                                {
+                                    <li>
+                                        <a class="text-nowrap" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">會員中心</a>
+                                        <ul class="dropdown">
+                                            <li class="text-nowrap">
+                                                <a class="text-nowrap" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">個人資料修改</a>
+                                            </li>
+                                            <li class="text-nowrap">
+                                                <a class="text-nowrap" asp-area="" asp-controller="ParentBinding" asp-action="ViewParent">家長綁定設定</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                                @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), Roles.SuperAdmin.ToString()))
+                                {
+                                    <li>
+                                        <a class="text-nowrap" asp-area="" asp-controller="UserRoles" asp-action="Index">管理員中心</a>
+                                        <ul class="dropdown">
+                                            <li class="text-nowrap">
+                                                <a class="text-nowrap" asp-area="" asp-controller="UserRoles" asp-action="Index">會員身分管理</a>
+                                            </li>
+                                            <li class="text-nowrap">
+                                                <a class="text-nowrap" asp-area="" asp-controller="RoleManager" asp-action="Index">身分組更改</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                            }
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">討論區</a></li>
                             <li class="text-nowrap"><a asp-area="" asp-controller="Home" asp-action="Privacy">隱私權政策</a></li>
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">聯繫我們</a></li>
@@ -202,8 +226,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @*<script src="~/js/jquery-3.3.1.min.js"></script>*@
-    @*<script src="~/js/bootstrap.min.js"></script>*@
+    <script src="https://kit.fontawesome.com/7e8f4242cb.js" crossorigin="anonymous"></script>
     <script src="~/js/jquery.nice-select.min.js"></script>
     <script src="~/js/jquery.barfiller.js"></script>
     <script src="~/js/jquery.magnific-popup.min.js"></script>

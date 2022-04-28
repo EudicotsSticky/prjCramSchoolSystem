@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace prjCramSchoolSystem.Migrations
 {
-    public partial class StudentProfileandLogin : Migration
+    public partial class resetidentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,7 +26,7 @@ namespace prjCramSchoolSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentProfile",
+                name: "User",
                 schema: "Identity",
                 columns: table => new
                 {
@@ -39,9 +39,9 @@ namespace prjCramSchoolSystem.Migrations
                     Enrollment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Grade = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FatherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MotherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ThumbnailName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FatherId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MotherId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -61,7 +61,21 @@ namespace prjCramSchoolSystem.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentProfile", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_User_FatherId",
+                        column: x => x.FatherId,
+                        principalSchema: "Identity",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_User_User_MotherId",
+                        column: x => x.MotherId,
+                        principalSchema: "Identity",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,10 +116,10 @@ namespace prjCramSchoolSystem.Migrations
                 {
                     table.PrimaryKey("PK_UserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserClaims_StudentProfile_UserId",
+                        name: "FK_UserClaims_User_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
-                        principalTable: "StudentProfile",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -124,10 +138,10 @@ namespace prjCramSchoolSystem.Migrations
                 {
                     table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_UserLogins_StudentProfile_UserId",
+                        name: "FK_UserLogins_User_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
-                        principalTable: "StudentProfile",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -151,10 +165,10 @@ namespace prjCramSchoolSystem.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_StudentProfile_UserId",
+                        name: "FK_UserRoles_User_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
-                        principalTable: "StudentProfile",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -173,10 +187,10 @@ namespace prjCramSchoolSystem.Migrations
                 {
                     table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_UserTokens_StudentProfile_UserId",
+                        name: "FK_UserTokens_User_UserId",
                         column: x => x.UserId,
                         principalSchema: "Identity",
-                        principalTable: "StudentProfile",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -198,13 +212,25 @@ namespace prjCramSchoolSystem.Migrations
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 schema: "Identity",
-                table: "StudentProfile",
+                table: "User",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_FatherId",
+                schema: "Identity",
+                table: "User",
+                column: "FatherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_MotherId",
+                schema: "Identity",
+                table: "User",
+                column: "MotherId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 schema: "Identity",
-                table: "StudentProfile",
+                table: "User",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
@@ -255,7 +281,7 @@ namespace prjCramSchoolSystem.Migrations
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "StudentProfile",
+                name: "User",
                 schema: "Identity");
         }
     }

@@ -23,10 +23,8 @@ namespace prjCramSchoolSystem.Models.ParentBindingModel
 
         public string MotherId { get; set; }
 
-        [ForeignKey("FatherId")]
         public virtual ApplicationUser Father { get; set; }
 
-        [ForeignKey("MotherId")]
         public virtual ApplicationUser Mother { get; set; }
 
         [Display(Name = "父親名稱")]

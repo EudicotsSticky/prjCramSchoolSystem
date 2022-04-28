@@ -44,6 +44,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
         public IFormFile thumbnail { get; set; }
 
         // 資料模型
+        [Display(Name = "帳號")]
         public string Username { get; set; }
 
         [TempData]
@@ -63,7 +64,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "手機號碼")]
             public string PhoneNumber { get; set; }
 
             [Required]
@@ -99,7 +100,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "大頭貼照")]
             public string ThumbnailName { get; set; }
-                        
+
             [Display(Name = "最後更新日期")]
             [DataType(DataType.Date)]
             public DateTime? UpdateDate { get; set; }
@@ -113,11 +114,18 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
-            if(user.Father!=null)
-            FatherName = user.Father.LastName + user.Father.FirstName;
-            if (user.Mother  != null)
-                MotherName = user.Mother.LastName + user.Mother.FirstName;
-
+            if (!String.IsNullOrEmpty(user.FatherId))
+            {
+                ApplicationUser fatherData = await _userManager.FindByIdAsync(user.FatherId);
+                if (fatherData != null)
+                    FatherName = fatherData.LastName + fatherData.FirstName;
+            }
+            if (!String.IsNullOrEmpty(user.MotherId))
+            {
+                ApplicationUser motherData = await _userManager.FindByIdAsync(user.MotherId);
+                if (motherData != null)
+                    FatherName = motherData.LastName + motherData.FirstName;
+            }
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,

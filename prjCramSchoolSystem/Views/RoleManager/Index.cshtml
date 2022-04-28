@@ -19,6 +19,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Role</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,7 @@
                         <tr>
                             <td>@role.Id</td>
                             <td>@role.Name</td>
+                            <td><a asp-action="DeleteRole" asp-route-id="@role.Id">刪除</a></td>
                         </tr>
                     }
                 </tbody>

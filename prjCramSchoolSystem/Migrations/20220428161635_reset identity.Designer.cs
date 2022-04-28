@@ -10,8 +10,8 @@ using prjCramSchoolSystem.Data;
 namespace prjCramSchoolSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220401064838_add attribute PersonalData")]
-    partial class addattributePersonalData
+    [Migration("20220428161635_reset identity")]
+    partial class resetidentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace prjCramSchoolSystem.Migrations
             modelBuilder
                 .HasDefaultSchema("Identity")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.15")
+                .HasAnnotation("ProductVersion", "5.0.16")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -184,8 +184,8 @@ namespace prjCramSchoolSystem.Migrations
                     b.Property<string>("Enrollment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FatherName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("FatherId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -205,8 +205,8 @@ namespace prjCramSchoolSystem.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("MotherName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("MotherId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -231,7 +231,7 @@ namespace prjCramSchoolSystem.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ThumbnailUrl")
+                    b.Property<string>("ThumbnailName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -246,6 +246,10 @@ namespace prjCramSchoolSystem.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FatherId");
+
+                    b.HasIndex("MotherId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -254,7 +258,7 @@ namespace prjCramSchoolSystem.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("StudentProfile");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -306,6 +310,21 @@ namespace prjCramSchoolSystem.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("prjCramSchoolSystem.Data.ApplicationUser", b =>
+                {
+                    b.HasOne("prjCramSchoolSystem.Data.ApplicationUser", "Father")
+                        .WithMany()
+                        .HasForeignKey("FatherId");
+
+                    b.HasOne("prjCramSchoolSystem.Data.ApplicationUser", "Mother")
+                        .WithMany()
+                        .HasForeignKey("MotherId");
+
+                    b.Navigation("Father");
+
+                    b.Navigation("Mother");
                 });
 #pragma warning restore 612, 618
         }
