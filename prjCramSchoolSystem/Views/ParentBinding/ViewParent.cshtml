@@ -18,6 +18,30 @@
             <div class="form-group">
                 <label asp-for="FatherName" class="control-label"></label>
                 <input asp-for="FatherName" class="form-control" readonly />
+                <!-- Button trigger unbind father modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fatherUnbindingCenter">
+                    解除綁定
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="fatherUnbindingCenter" tabindex="-1" role="dialog" aria-labelledby="fatherUnbindingCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="fatherUnbindingLongTitle">解除綁定確認</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                您確定要解除父親帳號綁定？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                                <a class="btn btn-danger" asp-action="UnbindFather">確定</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="FatherEmailorUsername" class="control-label"></label>
@@ -27,6 +51,31 @@
             <div class="form-group">
                 <label asp-for="MotherName" class="control-label"></label>
                 <input asp-for="MotherName" class="form-control" readonly />
+                <!-- Button trigger unbind father modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#motherUnbindingCenter">
+                    解除綁定
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="motherUnbindingCenter" tabindex="-1" role="dialog" aria-labelledby="motherUnbindingCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="motherUnbindingLongTitle">解除綁定確認</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                您確定要解除母親帳號綁定？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                                <a class="btn btn-danger" asp-action="UnbindMother">確定</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="form-group">
                 <label asp-for="MotherEmailorUsername" class="control-label"></label>
@@ -41,9 +90,45 @@
 </div>
 
 <div>
-    <a asp-action="ViewParent">Back to List</a>
+    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">返回會員中心</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+        $('#FatherEmailorUsername').focusout(
+            function () {
+                $.ajax({
+                    url: "@Url.Action("FindUserParent", "ParentBinding")",
+                    type: "get",
+                    dataType: "text",
+                    data: `id=${$('#FatherEmailorUsername').val()}`,
+                    success: function (data) {
+                        //console.log(data);
+                        $('#haveFather').text(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+    );
+   $('#MotherEmailorUsername').focusout(
+            function () {
+                $.ajax({
+                    url: "@Url.Action("FindUserParent", "ParentBinding")",
+                    type: "get",
+                    dataType: "text",
+                    data: `id=${$('#MotherEmailorUsername').val()}`,
+                    success: function (data) {
+                        //console.log(data);
+                        $('#haveMother').text(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+    );
+</script>
 }

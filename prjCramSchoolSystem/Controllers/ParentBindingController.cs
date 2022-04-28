@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace prjCramSchoolSystem.Controllers
 {
+    [Authorize(Roles = "Default, SuperAdmin")]
     public class ParentBindingController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -23,64 +24,105 @@ namespace prjCramSchoolSystem.Controllers
             _signInManager = signInManager;
         }
 
-        [Authorize(Roles = "Default")]
         public async Task<IActionResult> ViewParent()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 return NotFound($"無法載入使用者'{_userManager.GetUserName(User)}'.");
-            }
+            
             ParentBindingModel parent = await (new ParentBindingModelFactory(_userManager, _signInManager)).LoadParentAsync(user);
 
             return await Task.Run(() => View(parent));
         }
 
-        // Api:Ajax找，回傳是否有找到家長
-        public async Task<IActionResult> FindParentAsync(string parentEmailorUsername)
-        {
-            ApplicationUser parentData = new ApplicationUser();
-            parentData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(parentEmailorUsername);
-            if (parentData != null)
-                return Content($"您的家長為：{parentData.LastName.ToString()+parentData.FirstName.ToString()}");
-            else
-            return Content("查無此資料");
-        }
-        
-        // POST: ParentBindingController/Edit/5
+        // 更改綁定
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ViewParent(ParentBindingModel parentBindingModel)
         {
             try
             {
+                // 如果非從本頁post，重新導向
+                if (parentBindingModel == null)
+                    return RedirectToAction(nameof(ViewParent));
+                // 建立使用者物件並將資料庫找到的使用者資料填入
+                ApplicationUser user = new ApplicationUser();
+                user = await _userManager.FindByIdAsync(parentBindingModel.Id);
+                // 如果找不到使用者，回傳
+                if (user == null)
+                    return NotFound("查無此使用者");
+                // 找父親資料
+                ApplicationUser fatherData = new ApplicationUser();
+                if(!String.IsNullOrEmpty(parentBindingModel.FatherEmailorUsername))
+                fatherData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(parentBindingModel.FatherEmailorUsername);
+
+                // 找母親資料
+                ApplicationUser motherData = new ApplicationUser();
+                if (!String.IsNullOrEmpty(parentBindingModel.MotherEmailorUsername))
+                    motherData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(parentBindingModel.MotherEmailorUsername);
+
+                if (fatherData != null || fatherData.Id != user.FatherId)
+                    user.FatherId = fatherData.Id;
+                if (motherData != null || motherData.Id != user.MotherId)
+                    user.MotherId = motherData.Id;
+
+                await _userManager.UpdateAsync(user);
+                await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction(nameof(ViewParent));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Content(ex.Message);
             }
         }
 
-        // GET: ParentBindingController/Delete/5
-        public ActionResult Delete(int id)
+        // Api:Ajax找，回傳是否有找到家長
+        public async Task<IActionResult> FindUserParent(string id)
         {
-            return View();
+            if (String.IsNullOrEmpty(id))
+                return Content("查無此資料");
+            ApplicationUser parentData = new ApplicationUser();
+            parentData = await (new ParentBindingModelFactory(_userManager, _signInManager)).FindParentAsync(id);
+            if (parentData != null)
+                return Content($"您的家長為：{parentData.LastName.ToString() + parentData.FirstName.ToString()}");
+            else
+                return Content("查無此資料");
+        }
+        // 點開連結會觸發
+        public async Task<IActionResult> UnbindFather()
+        {
+            // 解除綁定判斷交給前端，此處直接解綁
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound($"無法載入使用者'{_userManager.GetUserName(User)}'.");
+            if(String.IsNullOrEmpty(user.FatherId))
+                return RedirectToAction(nameof(ViewParent));
+
+            user.FatherId = null;
+
+            await _userManager.UpdateAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
+
+            return RedirectToAction(nameof(ViewParent));
         }
 
-        // POST: ParentBindingController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        // 點開連結會觸發
+        public async Task<IActionResult> UnbindMather()
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            // 解除綁定判斷交給前端，此處直接解綁
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound($"無法載入使用者'{_userManager.GetUserName(User)}'.");
+            if (String.IsNullOrEmpty(user.MotherId))
+                return RedirectToAction(nameof(ViewParent));
+
+            user.MotherId = null;
+
+            await _userManager.UpdateAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
+
+            return RedirectToAction(nameof(ViewParent));
         }
+
     }
 }

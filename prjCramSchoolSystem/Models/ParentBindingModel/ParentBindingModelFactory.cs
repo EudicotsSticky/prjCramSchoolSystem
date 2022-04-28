@@ -42,11 +42,18 @@ namespace prjCramSchoolSystem.Models.ParentBindingModel
                 parentData = await _userManager.FindByEmailAsync(nameOrEmail);
             else
                 parentData = await _userManager.FindByNameAsync(nameOrEmail);
+            if (parentData != null)
+            {
+                if (!await _userManager.IsInRoleAsync(parentData, Enums.Roles.Parent.ToString()))
+                    parentData = null;
+            }
             return parentData;
         }
 
         public bool IsValidEmail(string emailAddress)
         {
+            if (String.IsNullOrEmpty(emailAddress))
+                return false;
             try
             {
                 MailAddress m = new MailAddress(emailAddress);

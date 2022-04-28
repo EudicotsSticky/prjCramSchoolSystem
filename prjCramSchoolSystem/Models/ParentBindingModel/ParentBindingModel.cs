@@ -13,10 +13,10 @@ namespace prjCramSchoolSystem.Models.ParentBindingModel
         [Key]
         public string Id { get; set; }
 
-        [Display(Name ="請輸入父親帳號或信箱進行綁定：")]
+        [Display(Name ="請輸入父親帳號或信箱綁定：")]
         public string FatherEmailorUsername { get; set; }
 
-        [Display(Name = "請輸入母親帳號或信箱進行綁定：")]
+        [Display(Name = "請輸入母親帳號或信箱綁定：")]
         public string MotherEmailorUsername { get; set; }
 
         public string FatherId { get; set; }

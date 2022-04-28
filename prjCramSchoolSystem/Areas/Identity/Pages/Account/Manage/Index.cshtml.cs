@@ -149,7 +149,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             // 發生無預期狀況導致無法以ID載入資料
             if (user == null)
             {
-                return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'.");
+                return NotFound($"無法載入使用者'{_userManager.GetUserId(User)}'。");
             }
             // 一般情況就採用載入方法加入user資料
             await LoadAsync(user);
