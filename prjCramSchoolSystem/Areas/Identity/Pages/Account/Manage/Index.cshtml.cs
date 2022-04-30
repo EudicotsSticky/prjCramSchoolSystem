@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using prjCramSchoolSystem.Data;
 
 namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
@@ -80,6 +81,13 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             [DataType(DataType.Text)]
             [Display(Name = "性別")]
             public string Gender { get; set; }
+
+            public List<SelectListItem> Genders { get; } = new List<SelectListItem>
+            {
+                new SelectListItem{Value=Enums.Gender.male.ToString(), Text="男"},
+                new SelectListItem{Value=Enums.Gender.female.ToString(), Text="女"},
+                new SelectListItem{Value=Enums.Gender.other.ToString(), Text="其他"},
+            };
 
             [DataType(DataType.Date)]
             [Display(Name = "生日")]
