@@ -60,7 +60,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"請點擊<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>此處</a>重設您的密碼。");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

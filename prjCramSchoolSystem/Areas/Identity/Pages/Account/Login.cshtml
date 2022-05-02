@@ -4,12 +4,11 @@
 @{
     ViewData["Title"] = "登入";
 }
+<section class="spad">
+    <div class="container">
 
-<div class="container">
-
-    <div class="row">
-        <div class="col-md-4">
-            <section class="spad">
+        <div class="row">
+            <div class="col-md-5">
                 <form id="account" method="post">
                     <h1>@ViewData["Title"]</h1>
                     <h4>請輸入帳號密碼</h4>
@@ -48,10 +47,8 @@
                         </p>
                     </div>
                 </form>
-            </section>
-        </div>
-        <div class="col-md-6 col-md-offset-2">
-            <section class="spad">
+            </div>
+            <div class="col-md-7 col-md-offset-2">
                 <h4>使用第三方登入</h4>
                 <hr />
                 @{
@@ -78,10 +75,11 @@
                         </form>
                     }
                 }
-            </section>
+            </div>
         </div>
     </div>
-    </div>
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

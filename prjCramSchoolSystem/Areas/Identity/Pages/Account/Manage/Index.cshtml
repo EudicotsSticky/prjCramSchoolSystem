@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label asp-for="Input.FirstName"></label>
                         <input asp-for="Input.FirstName" class="form-control" />
-                    </div>                   
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -48,7 +48,9 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="Input.Gender"></label>
-                        <select asp-for="Input.Gender" asp-items="Model.Input.Genders" class="form-control"></select>
+                        <div class="shop__option">
+                            <select asp-for="Input.Gender" asp-items="Model.Input.Genders" class="form-control"></select>
+                        </div>
                     </div>
                 </div>
             </div>
