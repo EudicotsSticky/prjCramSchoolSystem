@@ -32,7 +32,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
         public class InputModel
         {
             [BindProperty]
-            [Required]
+            [Required(ErrorMessage ="請輸入恢復碼")]
             [DataType(DataType.Text)]
             [Display(Name = "Recovery Code")]
             public string RecoveryCode { get; set; }
