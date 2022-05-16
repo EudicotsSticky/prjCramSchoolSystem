@@ -61,6 +61,13 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 new SelectListItem{Value=Enums.Gender.female.ToString(), Text="女"},
                 new SelectListItem{Value=Enums.Gender.other.ToString(), Text="其他"},
             };
+
+            Genders = new List<SelectListItem>
+            {
+                new SelectListItem{Value=Enums.Gender.male.ToString(), Text="男"},
+                new SelectListItem{Value=Enums.Gender.female.ToString(), Text="女"},
+                new SelectListItem{Value=Enums.Gender.other.ToString(), Text="其他"},
+            };
         }
 
         // 大頭貼資料夾存取路徑
