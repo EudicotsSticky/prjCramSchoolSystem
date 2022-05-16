@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using prjCramSchoolSystem.Data;
 using System.Net.Mail;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using prjCramSchoolSystem.Models;
 
 namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
 {
@@ -44,11 +47,11 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage ="請輸入帳號 / 信箱")]
             [Display(Name ="帳號 / 信箱")]
             public string LoginInput { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "請輸入密碼")]
             [DataType(DataType.Password)]
             [Display(Name ="密碼")]
             public string Password { get; set; }
@@ -109,6 +112,13 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    var user = await _userManager.FindByNameAsync(userName);
+                    if (user != null)
+                    {
+                        string userId = user.UserName.ToString();
+                        var json = JsonSerializer.Serialize(userId);
+                        HttpContext.Session.SetString(CDictionary.SK_LONGUNED_ID, json);
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -122,7 +132,7 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "帳號/信箱或密碼輸入錯誤。");
                     return Page();
                 }
             }

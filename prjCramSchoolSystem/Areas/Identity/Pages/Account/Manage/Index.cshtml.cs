@@ -68,12 +68,12 @@ namespace prjCramSchoolSystem.Areas.Identity.Pages.Account.Manage
             [Display(Name = "手機號碼")]
             public string PhoneNumber { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "請輸入名字")]
             [DataType(DataType.Text)]
             [Display(Name = "名字")]
             public string FirstName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "請輸入姓")]
             [DataType(DataType.Text)]
             [Display(Name = "姓")]
             public string LastName { get; set; }

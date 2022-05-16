@@ -20,6 +20,7 @@
                             <img class="img-thumbnail rounded" style="max-height:200px" id="thumbnailImg" src="@Url.Content(Model.FolderPath)@Model.ThumbnailPath" alt="無此圖片" />
                             <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/*">
                         </div>
+                        <span asp-validation-for="Input.ThumbnailName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -30,11 +31,13 @@
                     <div class="form-group">
                         <label asp-for="Input.LastName"></label>
                         <input asp-for="Input.LastName" class="form-control" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Input.FirstName"></label>
                         <input asp-for="Input.FirstName" class="form-control" />
-                    </div>                   
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -48,7 +51,9 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="Input.Gender"></label>
-                        <select asp-for="Input.Gender" asp-items="Model.Input.Genders" class="form-control"></select>
+                        <div class="input__model">
+                            <select asp-for="Input.Gender" asp-items="Model.Input.Genders" class="form-control"></select>
+                        </div>
                     </div>
                 </div>
             </div>
